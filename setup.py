@@ -10,6 +10,7 @@ setup(
     version='0.1',
     description='Eases the testing of web services.',
     long_description=open("README.rst").read(),
+    license="GPL",
     author='Andrew McFague',
     author_email='amcfague@wgen.net',
     url='https://github.com/amcfague/webunit2',
