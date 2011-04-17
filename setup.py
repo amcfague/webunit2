@@ -14,6 +14,7 @@ setup(
     url='http://pypi.python.org/pypi/webtest2',
     zip_safe=True,
     packages=find_packages(exclude=["ez_setup", "tests"]),
+    test_suite='nose.collector',
     install_requires=[
         "httplib2",
         "poster",
