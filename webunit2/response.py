@@ -78,3 +78,6 @@ class HttpResponse(object):
                 return False
 
         return True
+
+    def assertNotCookie(self, name, value=None, attrs={}):
+        return not self.assertCookie(name, value, attrs)
