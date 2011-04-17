@@ -5,6 +5,38 @@ import urlparse
 RE_PROTOCOL_SERVER = re.compile(r"^(http|https):\/\/\/*[\w\.\-]+")
 
 
+def parse_cookies(set_cookie_headers):
+    if not set_cookie_headers:
+        return
+
+    # httplib2 joins all the cookies by commas... break them apart here!
+    # Unfortunately, commas are also used in dates, so be clever here.
+    # TODO How reliable is this?
+    all_cookie_strings = re.split(r'(?<!expires=...), ', set_cookie_headers)
+
+    cookies = {}
+    for cookie_str in all_cookie_strings:
+        cookie_attr_strs = re.split(r'; +', cookie_str)
+
+        # The first entry in a cookie is ALWAYS `name=value`
+        cookie_name, cookie_value = cookie_attr_strs[0].split("=", 1)
+
+        cookie_attr_dict = {"secure": False, "httponly": False}
+        for part in cookie_attr_strs:
+            part_lower = part.lower()
+            if part_lower in ["secure", "httponly"]:
+                cookie_attr_dict[part_lower] = True
+            elif "=" in part:
+                key, value = part.split("=", 1)
+                cookie_attr_dict[key.lower()] = value
+            else:
+                log.warning("Unknown cookie detected: %s", part)
+
+        cookies[cookie_name.lower()] = cookie_attr_dict
+
+    return cookies
+
+
 def parse_url(url):
     """ Takes a URL string and returns its protocol and server """
     # Verify that the protocol makes sense.  We shouldn't guess!
