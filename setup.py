@@ -9,6 +9,7 @@ setup(
     name='webunit2',
     version='0.1',
     description='Eases the testing of web services.',
+    long_description=open("README.rst").read(),
     author='Andrew McFague',
     author_email='amcfague@wgen.net',
     url='http://pypi.python.org/pypi/webunit2',
