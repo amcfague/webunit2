@@ -71,7 +71,36 @@ class TestResponse(unittest.TestCase):
         self.assertTrue(resp.assertNotHeader('not a header'))
         self.assertTrue(resp.assertNotHeader('not a header', 'not a value'))
 
-    @patch("webunit2.utils.parse_cookies", Mock(return_value=None))
-    def test_assert_cookie(self):
+    @patch("webunit2.utils.parse_cookies")
+    def test_assert_cookie(self, mock_parse_cookies):
         """ Test that checking for cookies returns the correct values """
+        mock_parse_cookies.return_value = {
+            "token": {
+                "token": "someval",
+                "httponly": True,
+                "secure": False,
+                "path": "/",
+                "expires": "Wed, 09 Jun 2021 10:18:14 GMT"
+            }
+        }
         resp = HttpResponse(self.mock_response)
+        self.assertFalse(resp.assertCookie("not valid"))
+        self.assertFalse(resp.assertCookie("not valid", "someval"))
+        self.assertFalse(resp.assertCookie("not valid", "someval", attrs={"secure": False}))
+        self.assertFalse(resp.assertCookie("not valid", attrs={"secure": False}))
+        self.assertFalse(resp.assertCookie("token", "not a val", attrs={"Secure": True}))
+        self.assertFalse(resp.assertCookie("token", attrs={"Secure": True}))
+        self.assertTrue(resp.assertCookie("token"))
+        self.assertTrue(resp.assertCookie("token", "someval"))
+        self.assertTrue(resp.assertCookie("token", "someval", {"Secure": False}))
+        self.assertTrue(resp.assertCookie("token", attrs={"Secure": False}))
+
+        self.assertFalse(resp.assertNotCookie("token"))
+        self.assertFalse(resp.assertNotCookie("token", "someval"))
+        self.assertFalse(resp.assertNotCookie("token", "someval", {"Secure": False}))
+        self.assertFalse(resp.assertNotCookie("token", attrs={"Secure": False}))
+        self.assertTrue(resp.assertNotCookie("not valid"))
+        self.assertTrue(resp.assertNotCookie("not valid", "someval"))
+        self.assertTrue(resp.assertNotCookie("not valid", "someval", attrs={"secure": True}))
+        self.assertTrue(resp.assertNotCookie("not valid", attrs={"secure": True}))
+        self.assertTrue(resp.assertNotCookie("token", attrs={"Secure": True}))
