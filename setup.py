@@ -12,7 +12,7 @@ setup(
     long_description=open("README.rst").read(),
     author='Andrew McFague',
     author_email='amcfague@wgen.net',
-    url='http://pypi.python.org/pypi/webunit2',
+    url='https://github.com/amcfague/webunit2',
     zip_safe=True,
     packages=find_packages(exclude=["ez_setup", "tests"]),
     install_requires=[
