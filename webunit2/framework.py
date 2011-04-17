@@ -1,14 +1,16 @@
 import base64
-import httplib2
 import logging
-import poster.encode
-import re
 import urllib
 import urlparse
 
+import httplib2
+import poster.encode
+
 from webunit2.utils import parse_url
 
+
 log = logging.getLogger(__name__)
+
 
 class Framework(object):
     """
@@ -22,7 +24,7 @@ class Framework(object):
 
             http://someurl.com
             https://super-service.com:123
-        
+
         URLs containing additional information (such as paths) will have it
         stripped::
 

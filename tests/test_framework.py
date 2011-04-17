@@ -1,8 +1,11 @@
 import base64
 import unittest
 import urllib
-from webunit2 import Framework
+
 from mock import patch
+
+from webunit2 import Framework
+
 
 class TestFramework(unittest.TestCase):
 
