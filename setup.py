@@ -11,13 +11,17 @@ setup(
     description='Eases the testing of web services.',
     author='Andrew McFague',
     author_email='amcfague@wgen.net',
-    url='http://pypi.python.org/pypi/webtest2',
+    url='http://pypi.python.org/pypi/webunit2',
     zip_safe=True,
     packages=find_packages(exclude=["ez_setup", "tests"]),
-    test_suite='nose.collector',
     install_requires=[
         "httplib2",
         "poster",
+    ],
+    test_suite='nose.collector',
+    tests_require=[
+        "mock",
+        "nose",
     ],
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
