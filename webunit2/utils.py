@@ -12,14 +12,15 @@ def parse_cookies(set_cookie_headers):
     # httplib2 joins all the cookies by commas... break them apart here!
     # Unfortunately, commas are also used in dates, so be clever here.
     # TODO How reliable is this?
-    all_cookie_strings = re.split(r'(?<!expires=...), ', set_cookie_headers)
+    all_cookie_strings = re.split(r'(?<!expires=...), ', set_cookie_headers,
+                                 flags=re.IGNORECASE)
 
     cookies = {}
     for cookie_str in all_cookie_strings:
         cookie_attr_strs = re.split(r'; +', cookie_str)
 
         # The first entry in a cookie is ALWAYS `name=value`
-        cookie_name, cookie_value = cookie_attr_strs[0].split("=", 1)
+        cookie_name, cookie_value = tuple(cookie_attr_strs[0].split("=", 1))
 
         cookie_attr_dict = {"secure": False, "httponly": False}
         for part in cookie_attr_strs:
