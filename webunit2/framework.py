@@ -6,6 +6,7 @@ import urlparse
 import httplib2
 import poster.encode
 
+from webunit2.response import HttpResponse
 from webunit2.utils import parse_url
 
 
@@ -95,15 +96,37 @@ class Framework(object):
         return urlparse.urlunparse((
             protocol, server, path, None, query_str, None))
 
-    def make_request(self, method, path, post_params={}, headers={},
+    def _make_request(self, uri, method, body="", headers={}):
+        """
+        Wraps the response and content returned by :mod:`httplib2` into a
+        :class:`~webunit2.response.HttpResponse` object.
+
+        ``uri``:
+            Absolute URI to the resource.
+        ``method``:
+            Any supported HTTP methods defined in :rfc:`2616`.
+        ``body``:
+            In the case of POST and PUT requests, this can contain the contents
+            of the request.
+        ``headers``:
+            Dictionary of header values to be sent as part of the request.
+
+        Returns a :class:`~webunit2.response.HttpResponse` object containing
+        the request results.
+        """
+        response, content = self._httpobj.request(
+            uri, method=method, body=body, headers=headers)
+
+        return HttpResponse(response, content)
+
+    def retrieve_page(self, method, path, post_params={}, headers={},
                       status=200, username=None, password=None):
         """
         Makes the actual request.  This will also go through and generate the
         needed steps to make the request, i.e. basic auth.
 
         ``method``:
-            Any supported HTTP methods defined in :rfc:`2616`, most commonly
-            one of `DELETE`, `GET`, `POST`, or `PUT`.
+            Any supported HTTP methods defined in :rfc:`2616`.
         ``path``:
             Absolute or relative path. See :meth:`_prepare_uri` for more
             detail.
@@ -141,12 +164,11 @@ class Framework(object):
             uri = self._prepare_uri(path, post_params)
 
         # Make the actual request
-        response, content = self._httpobj.request(uri,
-            method=method, body=body, headers=headers)
+        response = self._make_request(uri, method, body, headers)
 
         # Assert that the status we received was expected.
         if status:
-            real_status = int(response['status'])
+            real_status = int(response.status)
             assert real_status == int(status), \
                     "expected %s, received %s." % (status, real_status)
 
@@ -156,22 +178,22 @@ class Framework(object):
         """
         Wrapper around :meth:`make_request`, where ``method`` is `DELETE`.
         """
-        return self.make_request("DELETE", *args, **kwargs)
+        return self.retrieve_page("DELETE", *args, **kwargs)
 
     def get(self, *args, **kwargs):
         """
         Wrapper around :meth:`make_request`, where ``method`` is `GET`.
         """
-        return self.make_request("GET", *args, **kwargs)
+        return self.retrieve_page("GET", *args, **kwargs)
 
     def post(self, *args, **kwargs):
         """
         Wrapper around :meth:`make_request`, where ``method`` is `POST`.
         """
-        return self.make_request("POST", *args, **kwargs)
+        return self.retrieve_page("POST", *args, **kwargs)
 
     def put(self, *args, **kwargs):
         """
         Wrapper around :meth:`make_request`, where ``method`` is `PUT`.
         """
-        return self.make_request("PUT", *args, **kwargs)
+        return self.retrieve_page("PUT", *args, **kwargs)

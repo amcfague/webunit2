@@ -1,10 +1,12 @@
 import base64
+import httplib2
 import unittest
 import urllib
 
-from mock import patch
+from mock import MagicMock, Mock, patch
 
-from webunit2 import Framework
+from webunit2.framework import Framework
+from webunit2.response import HttpResponse
 
 
 class TestFramework(unittest.TestCase):
@@ -88,8 +90,8 @@ class TestFramework(unittest.TestCase):
         self.assertEqual(fw._prepare_uri(path, query_params), expected_uri)
 
 
-    @patch("httplib2.Http.request")
-    def test_make_request_basic_auth(self, mock_request):
+    @patch("webunit2.framework.Framework._make_request")
+    def test_retrieve_page_basic_auth(self, mock_make_request):
         """ Test that a basic auth request generates the correct header """
         path = "http://google.com"
         username, password = "user", "pass"
@@ -97,52 +99,57 @@ class TestFramework(unittest.TestCase):
         expected_uri = path
         expected_headers = {"Authorization": "Basic %s" % auth_str}
 
-        mock_request.return_value = {'status': 200}, ""
+        mock_http_response = MagicMock()
+        mock_http_response.status = 200
+        mock_make_request.return_value = mock_http_response
 
         fw = Framework()
-        fw.make_request("GET", path, username=username, password=password)
-        mock_request.asserted_called_with(expected_uri, method="GET",
+        fw.retrieve_page("GET", path, username=username, password=password)
+        mock_make_request.asserted_called_with(expected_uri, method="GET",
                                           body=None, headers=expected_headers)
 
-    @patch("httplib2.Http.request")
-    def test_make_request_params_non_post(self, mock_request):
+    @patch("webunit2.framework.Framework._make_request")
+    def test_retrieve_page_params_non_post(self, mock_make_request):
         """ Test that non-POST post params get set as a query string """
         path = "http://google.com"
         post_params = {"key1": "val1"}
         expected_uri = "?".join((path, urllib.urlencode(post_params)))
 
-        mock_request.return_value = {'status': 200}, ""
+        mock_http_response = MagicMock()
+        mock_http_response.status = 200
+        mock_http_response['set-cookie'] = ""
+        mock_make_request.return_value = mock_http_response
 
         fw = Framework()
-        fw.make_request("GET", path, post_params=post_params)
-        mock_request.asserted_called_with(expected_uri, method="GET",
+        fw.retrieve_page("GET", path, post_params=post_params)
+        mock_make_request.asserted_called_with(expected_uri, method="GET",
                                           body=None, headers=None)
 
 
-    @patch("webunit2.framework.Framework.make_request")
-    def test_delete(self, mock_make_request):
-        """ Test that a DELETE calls make_request with the correct parameters """
+    @patch("webunit2.framework.Framework.retrieve_page")
+    def test_delete(self, mock_retrieve_page):
+        """ Test that a DELETE calls retrieve_page with the correct parameters """
         fw = Framework()
         fw.delete()
-        mock_make_request.assert_called_with("DELETE")
+        mock_retrieve_page.assert_called_with("DELETE")
 
-    @patch("webunit2.framework.Framework.make_request")
-    def test_get(self, mock_make_request):
-        """ Test that a GET calls make_request with the correct parameters """
+    @patch("webunit2.framework.Framework.retrieve_page")
+    def test_get(self, mock_retrieve_page):
+        """ Test that a GET calls retrieve_page with the correct parameters """
         fw = Framework()
         fw.get()
-        mock_make_request.assert_called_with("GET")
+        mock_retrieve_page.assert_called_with("GET")
 
-    @patch("webunit2.framework.Framework.make_request")
-    def test_get(self, mock_make_request):
-        """ Test that a POST calls make_request with the correct parameters """
+    @patch("webunit2.framework.Framework.retrieve_page")
+    def test_get(self, mock_retrieve_page):
+        """ Test that a POST calls retrieve_page with the correct parameters """
         fw = Framework()
         fw.post()
-        mock_make_request.assert_called_with("POST")
+        mock_retrieve_page.assert_called_with("POST")
 
-    @patch("webunit2.framework.Framework.make_request")
-    def test_put(self, mock_make_request):
-        """ Test that a PUT calls make_request with the correct parameters """
+    @patch("webunit2.framework.Framework.retrieve_page")
+    def test_put(self, mock_retrieve_page):
+        """ Test that a PUT calls retrieve_page with the correct parameters """
         fw = Framework()
         fw.put()
-        mock_make_request.assert_called_with("PUT")
+        mock_retrieve_page.assert_called_with("PUT")
