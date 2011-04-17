@@ -4,6 +4,21 @@ library has been built from the ground up, complete with documentation and
 testing.  It's also `hosted on GitHub <https://github.com/amcfague/webunit2>`_,
 making it a cinch to fork.
 
+Documentation
+-------------
+
+`Documentation is available on PyPi. <http://packages.python.org/webunit2/>`_.
+
+You can also build the documentation yourself.  Make sure Sphinx is installed
+by running::
+
+    $ easy_install -U sphinx
+
+Then, clone the repository, `cd` into it, and run::
+
+    $ python setup.py build_sphinx
+
+Documentation is available in ``build/sphinx/html``.
 
 Getting Started
 ---------------
