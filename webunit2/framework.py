@@ -120,7 +120,8 @@ class Framework(object):
         return HttpResponse(response, content)
 
     def retrieve_page(self, method, path, post_params={}, headers={},
-                      status=200, username=None, password=None):
+                      status=200, username=None, password=None,
+                      *args, **kwargs):
         """
         Makes the actual request.  This will also go through and generate the
         needed steps to make the request, i.e. basic auth.

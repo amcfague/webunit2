@@ -22,27 +22,27 @@ class HttpResponse(object):
 
         self.raw_headers = dict(response)
 
-    def assertInBody(self, content):
+    def assertInBody(self, content, *args, **kwargs):
         """
         Returns `True` if ``content`` appears in the body of the response,
         `False` if not.
         """
         return content in self.body
 
-    def assertNotInBody(self, content):
+    def assertNotInBody(self, content, *args, **kwargs):
         return not self.assertInBody(content)
 
-    def assertStatus(self, status):
+    def assertStatus(self, status, *args, **kwargs):
         """
         Returns `True` if ``status`` was the status code received by this
         response, `False` if not.
         """
         return status == self.status_int
 
-    def assertNotStatus(self, status):
+    def assertNotStatus(self, status, *args, **kwargs):
         return not self.assertStatus(status)
 
-    def assertHeader(self, name, value=None):
+    def assertHeader(self, name, value=None, *args, **kwargs):
         """
         Returns `True` if ``name`` was in the headers and, if ``value`` is
         True, whether or not the values match, or `False` otherwise.
@@ -50,10 +50,10 @@ class HttpResponse(object):
         return name in self.raw_headers and (
             True if value is None else self.raw_headers[name] == value)
 
-    def assertNotHeader(self, name, value=None):
+    def assertNotHeader(self, name, value=None, *args, **kwargs):
         return not self.assertHeader(name, value)
     
-    def assertCookie(self, name, value=None, attrs={}):
+    def assertCookie(self, name, value=None, attrs={}, *args, **kwargs):
         """
         Returns `True` if:
 
@@ -79,5 +79,5 @@ class HttpResponse(object):
 
         return True
 
-    def assertNotCookie(self, name, value=None, attrs={}):
+    def assertNotCookie(self, name, value=None, attrs={}, *args, **kwargs):
         return not self.assertCookie(name, value, attrs)
