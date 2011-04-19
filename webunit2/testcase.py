@@ -1,5 +1,4 @@
 import unittest
-import functools
 
 import webunit2.framework
 import webunit2.response
@@ -45,7 +44,7 @@ Alias for :meth:`~webunit2.framework.Framework.{action}` .
 
 
 
-class TestCase(unittest.TestCase, webunit2.framework.Framework):
+class TestCase(webunit2.framework.Framework, unittest.TestCase):
     """
     Basic wrapper around :class:`~webunit2.framework.Framework` that implements
     :class:`unittest.TestCase` and adds a variety of assertion methods.
@@ -53,5 +52,6 @@ class TestCase(unittest.TestCase, webunit2.framework.Framework):
 
     __metaclass__ = AssertionMaker
 
-    def __init__(self, url=None):
-        webunit2.framework.Framework.__init__(self, url)
+    def __init__(self, methodName='runTest', url=None):
+        unittest.TestCase.__init__(self, methodName=methodName)
+        webunit2.framework.Framework.__init__(self, url=url)
