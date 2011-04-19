@@ -5,12 +5,17 @@ except ImportError:
     use_setuptools()
     from setuptools import setup, find_packages
 
+try:
+    long_description = open("README.rst").read()
+except IOError:
+    long_description = None
+
 setup(
     name='webunit2',
     version='0.1',
     description='Eases the testing of web services.',
-    long_description=open("README.rst").read(),
     license="GPL",
+    long_description=long_description,
     author='Andrew McFague',
     author_email='redmumba@gmail.com',
     maintainer='Andrew McFague',
