@@ -3,6 +3,7 @@ import urlparse
 
 
 RE_PROTOCOL_SERVER = re.compile(r"^(http|https):\/\/\/*[\w\.\-]+")
+RE_COOKIE_STRINGS = re.compile(r"(?<!expires=...), ", re.IGNORECASE)
 
 
 def parse_cookies(set_cookie_headers):
@@ -12,8 +13,7 @@ def parse_cookies(set_cookie_headers):
     # httplib2 joins all the cookies by commas... break them apart here!
     # Unfortunately, commas are also used in dates, so be clever here.
     # TODO How reliable is this?
-    all_cookie_strings = re.split(r'(?<!expires=...), ', set_cookie_headers,
-                                 flags=re.IGNORECASE)
+    all_cookie_strings = RE_COOKIE_STRINGS.split(set_cookie_headers)
 
     cookies = {}
     for cookie_str in all_cookie_strings:
