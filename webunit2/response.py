@@ -1,5 +1,10 @@
 import webunit2.utils
 
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
+
 class HttpResponse(object):
     """
     Creates an object out of the :class:`httplib2.Response`, which is just a
@@ -19,6 +24,7 @@ class HttpResponse(object):
         self.content_type = response.get('content-type')
         self.cookies = webunit2.utils.parse_cookies(response.get('set-cookie'))
         self.body = content
+        self.body_file = StringIO(self.body)
 
         self.raw_headers = dict(response)
 
