@@ -169,7 +169,7 @@ class Framework(object):
 
         # Assert that the status we received was expected.
         if status:
-            real_status = int(response.status)
+            real_status = int(response.status_int)
             assert real_status == int(status), \
                     "expected %s, received %s." % (status, real_status)
 
