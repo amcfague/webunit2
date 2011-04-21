@@ -53,9 +53,6 @@ a lot of assertions--especially in content.  That's easy too! ::
             self.get_assertStatus('/something', status=200)
             self.get_assertContent('/something', content="hippo")
 
-            # Or do both in the same step
-            self.get_assert('/something', status=200, content="hippo")
-
 If either of these fail (i.e., the return code is not 200 or the content does
 not contain `hippo`), an ``AssertionError`` is raised as normal.
 
