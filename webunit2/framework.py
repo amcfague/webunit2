@@ -96,7 +96,7 @@ class Framework(object):
         return urlparse.urlunparse((
             protocol, server, path, None, query_str, None))
 
-    def _make_request(self, uri, method, body="", headers={}):
+    def _make_request(self, uri, method, body, headers={}):
         """
         Wraps the response and content returned by :mod:`httplib2` into a
         :class:`~webunit2.response.HttpResponse` object.
@@ -148,6 +148,9 @@ class Framework(object):
         the request.  For everything else, it is added as a query string to the
         URL.
         """
+        # Copy headers so that making changes here won't affect the original
+        headers = headers.copy()
+
         # Update basic auth information
         basicauth = self._prepare_basicauth(username, password)
         if basicauth:
@@ -161,7 +164,7 @@ class Framework(object):
             headers.update(form_hdrs)
             uri = self._prepare_uri(path)
         else:
-            body = None
+            body = ""
             uri = self._prepare_uri(path, post_params)
 
         # Make the actual request
