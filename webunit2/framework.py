@@ -190,6 +190,12 @@ class Framework(object):
         """
         return self.retrieve_page("GET", *args, **kwargs)
 
+    def head(self, *args, **kwargs):
+        """
+        Wrapper around :meth:`make_request`, where ``method`` is `HEAD`.
+        """
+        return self.retrieve_page("HEAD", *args, **kwargs)
+
     def post(self, *args, **kwargs):
         """
         Wrapper around :meth:`make_request`, where ``method`` is `POST`.

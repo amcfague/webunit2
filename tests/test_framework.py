@@ -141,6 +141,13 @@ class TestFramework(unittest.TestCase):
         mock_retrieve_page.assert_called_with("GET")
 
     @patch("webunit2.framework.Framework.retrieve_page")
+    def test_head(self, mock_retrieve_page):
+        """ Test that a HEAD calls retrieve_page with the correct parameters """
+        fw = Framework()
+        fw.head()
+        mock_retrieve_page.assert_called_with("HEAD")
+
+    @patch("webunit2.framework.Framework.retrieve_page")
     def test_post(self, mock_retrieve_page):
         """ Test that a POST calls retrieve_page with the correct parameters """
         fw = Framework()
