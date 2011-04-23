@@ -36,16 +36,24 @@ class HttpResponse(object):
         return content in self.body
 
     def assertNotInBody(self, content, *args, **kwargs):
+        """ Negation of :meth:`assertInBody`. """
         return not self.assertInBody(content)
 
     def assertStatus(self, status, *args, **kwargs):
         """
         Returns `True` if ``status`` was the status code received by this
         response, `False` if not.
+
+        .. note::
+
+            Its likely easier to specify the status when you call the functions
+            inside of your :class:`~webunit2.testcase.TestCase` class.  By
+            default, it will check for a 200 return code.
         """
         return status == self.status_int
 
     def assertNotStatus(self, status, *args, **kwargs):
+        """ Negation of :meth:`assertStatus`. """
         return not self.assertStatus(status)
 
     def assertHeader(self, name, value=None, *args, **kwargs):
@@ -57,6 +65,7 @@ class HttpResponse(object):
             True if value is None else self.raw_headers[name] == value)
 
     def assertNotHeader(self, name, value=None, *args, **kwargs):
+        """ Negation of :meth:`assertHeader`. """
         return not self.assertHeader(name, value)
     
     def assertCookie(self, name, value=None, attrs={}, *args, **kwargs):
@@ -86,4 +95,5 @@ class HttpResponse(object):
         return True
 
     def assertNotCookie(self, name, value=None, attrs={}, *args, **kwargs):
+        """ Negation of :meth:`assertCookie`. """
         return not self.assertCookie(name, value, attrs)
