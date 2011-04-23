@@ -50,14 +50,32 @@ Of course, because this is a unit testing framework, you'll probably be making
 a lot of assertions--especially in content.  That's easy too! ::
 
         def test_for_content(self):
-            self.get_assertStatus('/something', status=200)
+            # Assert the word `hippo` appears in the content.
             self.get_assertContent('/something', content="hippo")
+            # Assert that the `X-Customheader` header was set.
+            self.get_assertHeader('/something', 'X-Customheader')
 
 If either of these fail (i.e., the return code is not 200 or the content does
-not contain `hippo`), an ``AssertionError`` is raised as normal.
+not contain `hippo`), an ``AssertionError`` is raised as normal.  And of
+course, if you need to check for multiple values on the response, the same
+``assert*`` functions are available directly on the response.  For example, the
+above could be rewritten as::
+
+        def test_for_content_resp(self):
+            resp = self.get('/something')
+            # Assert the word `hippo` appears in the content.
+            resp.assertContent("hippo")
+            # Assert that the `X-Customheader` header was set.
+            resp.assertHeader('X-Customheader')
+
+This also allows you to chain many more assertions together--i.e., checking for
+headers, cookies, etc..  These were *all* designed to make testing easier, so
+if you have suggestions or complaints...
 
 Contributing
 ------------
 
 The source code is `hosted on Github <https://github.com/amcfague/webunit2>`_,
-which makes it a cinch to fork and contribute.
+which makes it a cinch to fork and contribute.  `Please submit issues using the
+GitHub tracker <https://github.com/amcfague/webunit2/issues>`_!  I love getting
+feedback, and I urge you to file tickets for features and/or bugs.
