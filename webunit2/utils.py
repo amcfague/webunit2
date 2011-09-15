@@ -8,7 +8,7 @@ RE_COOKIE_STRINGS = re.compile(r"(?<!expires=...), ", re.IGNORECASE)
 
 def parse_cookies(set_cookie_headers):
     if not set_cookie_headers:
-        return
+        return {}
 
     # httplib2 joins all the cookies by commas... break them apart here!
     # Unfortunately, commas are also used in dates, so be clever here.
