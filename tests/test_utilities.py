@@ -40,6 +40,6 @@ class TestUtilities(unittest.TestCase):
         cookie_str = "fake.cookie=; Path=/; Expires=Wed,; Secure; HttpOnly 31-Dec-69 00:00:00 GMT; Max-Age=0; secure; Secure; HttpOnly; path=/"
         try:
             cookies = parse_cookies(cookie_str)
-            fail
+            self.fail("No exception was raised")
         except CookieException:
             return
