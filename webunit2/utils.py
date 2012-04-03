@@ -1,10 +1,12 @@
 import re
 import urlparse
+import logging
 
 
 RE_PROTOCOL_SERVER = re.compile(r"^(http|https):\/\/\/*[\w\.\-]+")
 RE_COOKIE_STRINGS = re.compile(r"(?<!expires=...), ", re.IGNORECASE)
 
+log = logging.getLogger(__name__)
 
 def parse_cookies(set_cookie_headers):
     if not set_cookie_headers:
@@ -31,7 +33,9 @@ def parse_cookies(set_cookie_headers):
                 key, value = part.split("=", 1)
                 cookie_attr_dict[key.lower()] = value
             else:
-                log.warning("Unknown cookie detected: %s", part)
+                log.error("Unknown cookie detected: %s", part)
+                raise CookieException("Invalid cookie: %s" % cookie_str)
+
 
         cookies[cookie_name.lower()] = cookie_attr_dict
 
@@ -47,3 +51,6 @@ def parse_url(url):
     protocol, server, path, _, _, _ = urlparse.urlparse(url)
 
     return protocol, server
+
+class CookieException(Exception):
+    pass
