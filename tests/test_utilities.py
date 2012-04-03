@@ -1,5 +1,5 @@
 import unittest
-from webunit2.utils import parse_cookies, parse_url
+from webunit2.utils import parse_cookies, parse_url, CookieException
 
 class TestUtilities(unittest.TestCase):
 
@@ -34,3 +34,12 @@ class TestUtilities(unittest.TestCase):
         }
 
         self.assertEqual(cookies, expected_cookies)
+
+    def test_parse_invalid_cookies(self):
+        """ Test that an invalid cookie string causes an error """
+        cookie_str = "fake.cookie=; Path=/; Expires=Wed,; Secure; HttpOnly 31-Dec-69 00:00:00 GMT; Max-Age=0; secure; Secure; HttpOnly; path=/"
+        try:
+            cookies = parse_cookies(cookie_str)
+            self.fail("No exception was raised")
+        except CookieException:
+            return
