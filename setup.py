@@ -12,7 +12,7 @@ except IOError:
 
 setup(
     name='webunit2',
-    version='0.2.1',
+    version='0.2.2',
     description='Eases the testing of web services.',
     license="GPL",
     long_description=long_description,
