@@ -17,7 +17,7 @@ class Framework(object):
     """
     This is a basic framework to automate interacting with any web service.  It
     is intended to be used for integration testing, but in all reality, it can
-    be used for anything that is consistantly making requests.
+    be used for anything that is consistently making requests.
 
     ``url``:
         A full URL with protocol included.  If the service is running on a
